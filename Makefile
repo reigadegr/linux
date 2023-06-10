@@ -1051,6 +1051,7 @@ ifdef CONFIG_LTO_CLANG_FULL
 CC_FLAGS_LTO	:= -flto
 else
 CC_FLAGS_LTO	:= -flto=thin -fsplit-lto-unit
+KBUILD_LDFLAGS	+= --thinlto-jobs=$(nproc --all)
 endif
 CC_FLAGS_LTO	+= -fvisibility=hidden
 
