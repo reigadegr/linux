@@ -1047,6 +1047,7 @@ endif
 
 ifdef CONFIG_LTO
 KBUILD_CFLAGS	+= $(CC_FLAGS_LTO)
+KBUILD_LDFLAGS	+= --thinlto-jobs=$(nproc --all)
 export CC_FLAGS_LTO
 endif
 
