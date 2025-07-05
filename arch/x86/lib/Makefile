@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
+ccflags-y += -O3
 #
 # Makefile for x86 specific library files.
 #

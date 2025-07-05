@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
+KBUILD_CFLAGS   += $(call cc-option,-fgcse-after-reload)
 # Unified Makefile for i386 and x86_64
 
 # select defconfig based on actual architecture
