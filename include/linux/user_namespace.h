@@ -168,6 +168,8 @@ static inline void set_userns_rlimit_max(struct user_namespace *ns,
 
 #ifdef CONFIG_USER_NS
 
+extern int unprivileged_userns_clone;
+
 static inline struct user_namespace *get_user_ns(struct user_namespace *ns)
 {
 	if (ns)
@@ -202,6 +204,8 @@ struct ns_common *ns_get_owner(struct ns_common *ns);
 
 extern int unprivileged_userns_clone;
 #else
+
+#define unprivileged_userns_clone 0
 
 static inline struct user_namespace *get_user_ns(struct user_namespace *ns)
 {
