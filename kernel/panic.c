@@ -919,7 +919,7 @@ device_initcall(register_warn_debugfs);
  * Called when gcc's -fstack-protector feature is used, and
  * gcc detects corruption of the on-stack canary value
  */
-__visible noinstr void __stack_chk_fail(void)
+__visible noinstr __noreturn void __stack_chk_fail(void)
 {
 	unsigned long flags;
 

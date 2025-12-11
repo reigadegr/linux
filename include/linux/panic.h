@@ -32,7 +32,7 @@ extern int sysctl_panic_on_stackoverflow;
 
 extern bool crash_kexec_post_notifiers;
 
-extern void __stack_chk_fail(void);
+extern __noreturn void __stack_chk_fail(void);
 void abort(void);
 
 /*
