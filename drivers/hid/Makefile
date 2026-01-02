@@ -77,6 +77,7 @@ obj-$(CONFIG_HID_KYE)		+= hid-kye.o
 obj-$(CONFIG_HID_KYSONA)	+= hid-kysona.o
 obj-$(CONFIG_HID_LCPOWER)	+= hid-lcpower.o
 obj-$(CONFIG_HID_LENOVO)	+= hid-lenovo.o
+obj-$(CONFIG_HID_LENOVO_GO)	+= hid-lenovo-go.o
 obj-$(CONFIG_HID_LETSKETCH)	+= hid-letsketch.o
 obj-$(CONFIG_HID_LOGITECH)	+= hid-logitech.o
 obj-$(CONFIG_HID_LOGITECH)	+= hid-lg-g15.o
@@ -174,6 +175,8 @@ obj-$(CONFIG_INTEL_ISH_HID)	+= intel-ish-hid/
 
 obj-$(CONFIG_AMD_SFH_HID)       += amd-sfh-hid/
 
+obj-$(CONFIG_ZOTAC_ZONE_HID)  += zotac-zone-hid/
+
 obj-$(CONFIG_SURFACE_HID_CORE)  += surface-hid/
 
 obj-$(CONFIG_INTEL_THC_HID)     += intel-thc-hid/
@@ -181,3 +184,7 @@ obj-$(CONFIG_INTEL_THC_HID)     += intel-thc-hid/
 obj-$(CONFIG_SPI_HID_APPLE_CORE)	+= spi-hid/
 
 obj-$(CONFIG_HID_DOCKCHANNEL)   += dockchannel-hid/
+
+obj-$(CONFIG_HID_MSI_CLAW)      += hid-msi-claw.o
+
+obj-$(CONFIG_LENOVO_LEGOS_HID)  += lenovo-legos-hid/
