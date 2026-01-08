@@ -727,6 +727,9 @@ void elv_update_nr_hw_queues(struct request_queue *q,
  */
 void elevator_set_default(struct request_queue *q)
 {
+	if (q->tag_set->flags & BLK_MQ_F_NO_SCHED_BY_DEFAULT)
+		return;
+
 	struct elv_change_ctx ctx = {
 #if defined(CONFIG_ZEN_INTERACTIVE) && defined(CONFIG_IOSCHED_BFQ)
 		.name = "bfq",
@@ -740,28 +743,19 @@ void elevator_set_default(struct request_queue *q)
 	/* now we allow to switch elevator */
 	blk_queue_flag_clear(QUEUE_FLAG_NO_ELV_SWITCH, q);
 
-	if (q->tag_set->flags & BLK_MQ_F_NO_SCHED_BY_DEFAULT)
-		return;
-
-#ifdef CONFIG_MQ_IOSCHED_DEFAULT_ADIOS
-	ctx.name = "adios";
-#else // !CONFIG_MQ_IOSCHED_DEFAULT_ADIOS
-	bool is_sq = q->nr_hw_queues == 1 || blk_mq_is_shared_tags(q->tag_set->flags);
-	if (!is_sq)
-		return;
-#endif // CONFIG_MQ_IOSCHED_DEFAULT_ADIOS
-
 	/*
 	 * For single queue devices, default to using mq-deadline. If we
 	 * have multiple queues or mq-deadline is not available, default
 	 * to "none".
 	 */
 	if (q->nr_hw_queues != 1 && !blk_mq_is_shared_tags(q->tag_set->flags))
-#if defined(CONFIG_ZEN_INTERACTIVE) && defined(CONFIG_MQ_IOSCHED_KYBER)
+#ifdef CONFIG_MQ_IOSCHED_DEFAULT_ADIOS
+		ctx.name = "adios";
+#elif defined(CONFIG_ZEN_INTERACTIVE) && defined(CONFIG_MQ_IOSCHED_KYBER)
 		ctx.name = "kyber";
 #else
 		return;
-#endif
+#endif // CONFIG_MQ_IOSCHED_DEFAULT_ADIOS
 
 	ctx.type = elevator_find_get(ctx.name);
 	if (!ctx.type)
