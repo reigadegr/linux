@@ -1726,6 +1726,25 @@ sd_init(struct sched_domain_topology_level *tl,
 		sd->shared = *per_cpu_ptr(sdd->sds, sd_id);
 		atomic_inc(&sd->shared->ref);
 		atomic_set(&sd->shared->nr_busy_cpus, sd_weight);
+
+#ifdef CONFIG_SCHED_POC_SELECTOR
+		int range = cpumask_last(sd_span) - sd_id + 1;
+		int nr_words = DIV_ROUND_UP(range, 64);
+		int i;
+
+		sd->shared->poc_cpu_base = sd_id;
+		if (nr_words <= POC_MASK_WORDS_MAX) {
+			sd->shared->poc_nr_words = nr_words;
+			sd->shared->poc_fast_eligible = true;
+		} else {
+			sd->shared->poc_nr_words = 0;
+			sd->shared->poc_fast_eligible = false;
+		}
+		for (i = 0; i < POC_MASK_WORDS_MAX; i++) {
+			atomic64_set(&sd->shared->poc_idle_cpus[i], 0);
+			atomic64_set(&sd->shared->poc_idle_cores[i], 0);
+		}
+#endif
 	}
 
 	sd->private = sdd;

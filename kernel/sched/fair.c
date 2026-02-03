@@ -7718,6 +7718,9 @@ static inline bool is_idle_core(int cpu)
 
 #endif /* !CONFIG_SCHED_SMT */
 
+#ifdef CONFIG_SCHED_POC_SELECTOR
+#include "poc_selector.c"
+#endif
 /*
  * Scan the LLC domain for idle CPUs; this is dynamically regulated by
  * comparing the average scan cost (tracked in sd->avg_scan_cost) against the
@@ -7728,6 +7731,13 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, bool 
 	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_rq_mask);
 	int i, cpu, idle_cpu = -1, nr = INT_MAX;
 	struct sched_domain_shared *sd_share;
+
+#ifdef CONFIG_SCHED_POC_SELECTOR
+	/* Try fast path POC Selector first (SMT-aware 2-phase search) */
+	cpu = select_idle_cpu_poc(p, sd, has_idle_core, target);
+	if (cpu >= 0)
+		return cpu;
+#endif
 
 	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
 
