@@ -1112,6 +1112,7 @@ void __init swap_setup(void)
 		page_cluster = 2;
 	else
 		page_cluster = 3;
+#endif /* CONFIG_CACHY */
 	/*
 	 * Right now other parts of the system means that we
 	 * _really_ don't want to cluster much more

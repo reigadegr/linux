@@ -743,6 +743,14 @@ void elevator_set_default(struct request_queue *q)
 	/* now we allow to switch elevator */
 	blk_queue_flag_clear(QUEUE_FLAG_NO_ELV_SWITCH, q);
 
+#ifdef CONFIG_MQ_IOSCHED_DEFAULT_ADIOS
+	ctx.name = "adios";
+#else // !CONFIG_MQ_IOSCHED_DEFAULT_ADIOS
+	bool is_sq = q->nr_hw_queues == 1 || blk_mq_is_shared_tags(q->tag_set->flags);
+	if (!is_sq)
+		return;
+#endif // CONFIG_MQ_IOSCHED_DEFAULT_ADIOS
+
 	/*
 	 * For single queue devices, default to using mq-deadline. If we
 	 * have multiple queues or mq-deadline is not available, default
