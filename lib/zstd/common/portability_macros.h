@@ -61,7 +61,7 @@
 #ifndef DYNAMIC_BMI2
 #  if ((defined(__clang__) && __has_attribute(__target__)) \
       || (defined(__GNUC__) \
-          && (__GNUC__ >= 11))) \
+          && (__GNUC__ >= 5 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)))) \
       && (defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64)) \
       && !defined(__BMI2__)
 #    define DYNAMIC_BMI2 1
@@ -113,6 +113,25 @@
 
 #ifndef ZSTD_CET_ENDBRANCH
 # define ZSTD_CET_ENDBRANCH
+#endif
+
+/*
+ * ZSTD_IS_DETERMINISTIC_BUILD must be set to 0 if any compilation macro is
+ * active that impacts the compressed output.
+ *
+ * NOTE: ZSTD_MULTITHREAD is allowed to be set or unset.
+ */
+#if defined(ZSTD_CLEVEL_DEFAULT) \
+    || defined(ZSTD_EXCLUDE_DFAST_BLOCK_COMPRESSOR) \
+    || defined(ZSTD_EXCLUDE_GREEDY_BLOCK_COMPRESSOR) \
+    || defined(ZSTD_EXCLUDE_LAZY_BLOCK_COMPRESSOR) \
+    || defined(ZSTD_EXCLUDE_LAZY2_BLOCK_COMPRESSOR) \
+    || defined(ZSTD_EXCLUDE_BTLAZY2_BLOCK_COMPRESSOR) \
+    || defined(ZSTD_EXCLUDE_BTOPT_BLOCK_COMPRESSOR) \
+    || defined(ZSTD_EXCLUDE_BTULTRA_BLOCK_COMPRESSOR)
+# define ZSTD_IS_DETERMINISTIC_BUILD 0
+#else
+# define ZSTD_IS_DETERMINISTIC_BUILD 1
 #endif
 
 #endif /* ZSTD_PORTABILITY_MACROS_H */
